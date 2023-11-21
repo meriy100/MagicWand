@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if err := controllers.NewController().Run(); err != nil {
-		fmt.Printf("%+v", err)
+		fmt.Printf("%+v", err.Error())
 		os.Exit(1)
 	}
 }
