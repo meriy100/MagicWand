@@ -53,7 +53,7 @@ func (c *Controller) Run() error {
 		Validate: validate,
 	}
 
-	cs.ApplicationCommandName, err = prompt.Run()
+	cs.AppName, err = prompt.Run()
 
 	if err != nil {
 		return errors.Wrapf(err, "Prompt failed %v")
@@ -61,7 +61,7 @@ func (c *Controller) Run() error {
 
 	options := []struct {
 		Name  string
-		Value entities.ApplicationType
+		Value entities.AppType
 	}{
 		{
 			Name:  "Rest",
@@ -85,13 +85,13 @@ func (c *Controller) Run() error {
 	}
 
 	idx, _, err := promptS.Run()
-	cs.ApplicationType = options[idx].Value
+	cs.AppType = options[idx].Value
 
 	if err != nil {
 		return errors.Wrapf(err, "Prompt failed %v")
 	}
 
-	if err := interactor.CreateMain(cs.ApplicationCommandName, cs.ApplicationType); err != nil {
+	if err := interactor.CreateMain(cs.AppName, cs.AppType); err != nil {
 		return err
 	}
 

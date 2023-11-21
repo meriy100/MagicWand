@@ -8,14 +8,14 @@ import (
 	"path/filepath"
 )
 
-func (i *Interactor) CreateMain(applicationCmdName string, applicationType entities.ApplicationType) error {
-	fmt.Printf("Create cmd/%s/main.go\n", applicationCmdName)
-	fmt.Printf("%v\n", applicationType)
+func (i *Interactor) CreateMain(appName string, appType entities.AppType) error {
+	fmt.Printf("Create cmd/%s/main.go\n", appName)
+	fmt.Printf("%v\n", appType)
 	if err := os.Mkdir("cmd", 0755); err != nil {
 		return errors.Wrapf(err, "make directory failed")
 	}
 
-	if err := os.Mkdir(filepath.Join("cmd", applicationCmdName), 0755); err != nil {
+	if err := os.Mkdir(filepath.Join("cmd", appName), 0755); err != nil {
 		return errors.Wrapf(err, "make directory failed")
 	}
 

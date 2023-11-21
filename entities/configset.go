@@ -1,14 +1,14 @@
 package entities
 
-type ApplicationType int
+type AppType int
 
 const (
-	Rest ApplicationType = iota
+	Rest AppType = iota
 	GraphQL
 )
 
 type ConfigSet struct {
-	PackageName            string
-	ApplicationCommandName string
-	ApplicationType        ApplicationType
+	PackageName string
+	AppName     string
+	AppType     AppType
 }
