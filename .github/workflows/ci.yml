@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+env:
+  GO_VERSION: 1.21.4
+
+jobs:
+  check-mod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - run: go mod tidy && git diff --exit-code go.sum
+  check-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      - run: go install go.uber.org/mock/mockgen@latest
+      - run: find ./ -name "mock_*" -type d | xargs rm -rf -
+      - run: go generate ./... && git add . && git diff HEAD --name-only --exit-code
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: false
+      - uses: golangci/golangci-lint-action@v3
+
+  test:
+    permissions:
+      checks: write
+      pull-requests: write
+      actions: read
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Test
+        run: |
+          go test -v -race -coverprofile=coverage.out ./...
+
+      - name: Report coverage
+        uses: k1LoW/octocov-action@v0
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build
+        run: |
+          go build cmd/magicwand/main.go
