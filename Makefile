@@ -9,3 +9,6 @@ lint: setup.golangci-lint
 build:
 	go build -o ./bin/ ./cmd/...
 
+.PHONY: run
+run: build
+	cd example/basic && ../../bin/magicwand

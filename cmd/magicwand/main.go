@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/meriy100/magicwand/controllers"
+	"os"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	if err := controllers.NewController().Run(); err != nil {
+		fmt.Printf("%+v", err)
+		os.Exit(1)
+	}
 }
