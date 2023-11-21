@@ -14,6 +14,7 @@ func NewController() *Controller {
 }
 
 func (c *Controller) Run() error {
+	interactor := goinital.NewInteractor()
 	validate := func(input string) error {
 		if len(input) < 1 {
 			return errors.New("Invalid. package name is required")
@@ -32,9 +33,31 @@ func (c *Controller) Run() error {
 		return errors.Wrapf(err, "Prompt failed %v")
 	}
 
-	u := goinital.NewGomod()
-	if err := u.Init(result); err != nil {
+	if err := interactor.InitGomod(result); err != nil {
 		return err
 	}
+
+	validate = func(input string) error {
+		if len(input) < 1 {
+			return errors.New("Invalid. package name is required")
+		}
+		return nil
+	}
+
+	prompt = promptui.Prompt{
+		Label:    "application command name",
+		Validate: validate,
+	}
+
+	result, err = prompt.Run()
+
+	if err != nil {
+		return errors.Wrapf(err, "Prompt failed %v")
+	}
+
+	if err := interactor.CreateMain(result); err != nil {
+		return err
+	}
+
 	return nil
 }

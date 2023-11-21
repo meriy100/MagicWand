@@ -7,14 +7,7 @@ import (
 	"os/exec"
 )
 
-type Gomod struct {
-}
-
-func NewGomod() *Gomod {
-	return &Gomod{}
-}
-
-func (g *Gomod) Init(packageName string) error {
+func (i *Interactor) InitGomod(packageName string) error {
 	cmd := exec.Command("go", "mod", "init", packageName)
 	cmd.Stderr = os.Stderr
 	_, err := cmd.Output()
