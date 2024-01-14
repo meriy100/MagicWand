@@ -11,4 +11,4 @@ build:
 
 .PHONY: run
 run: build
-	cd example/basic && ../../bin/magicwand
+	rm -rf example/sample/* && cd example/sample && ../../bin/magicwand
