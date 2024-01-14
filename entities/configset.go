@@ -8,10 +8,10 @@ const (
 )
 
 type ConfigSet struct {
-	PackageName string
-	AppName     string
-	AppType     AppType
-	GCPConfig   GCPConfig
+	AppName         string
+	AppType         AppType
+	RepositoryOwner string
+	GCPConfig       GCPConfig
 }
 
 type GCPConfig struct {

@@ -52,12 +52,12 @@ func initialModel() model {
 
 		switch i {
 		case 0:
-			t.Placeholder = "PackageName"
+			t.Placeholder = "AppName"
 			t.Focus()
 			t.PromptStyle = focusedStyle
 			t.TextStyle = focusedStyle
 		case 1:
-			t.Placeholder = "AppName"
+			t.Placeholder = "Repository owner"
 			t.CharLimit = 64
 		case 2:
 			t.Placeholder = "GCP ProjectID"
@@ -157,13 +157,13 @@ type errMsg error
 func runCreateFiles(m model) tea.Msg {
 	interactor := goinital.NewInteractor()
 	cs := entities.ConfigSet{
-		PackageName: m.inputs[0].Value(),
-		AppName:     m.inputs[1].Value(),
+		AppName:         m.inputs[0].Value(),
+		RepositoryOwner: m.inputs[1].Value(),
 		GCPConfig: entities.GCPConfig{
 			ProjectID: m.inputs[2].Value(),
 		},
 	}
-	if err := interactor.InitGomod(cs.PackageName); err != nil {
+	if err := interactor.InitGomod(fmt.Sprintf("github.com/%s/%s", cs.RepositoryOwner, cs.AppName)); err != nil {
 		return errMsg(err)
 	}
 
@@ -179,6 +179,12 @@ func runCreateFiles(m model) tea.Msg {
 	if err := backend.Create(cs.GCPConfig); err != nil {
 		return errMsg(err)
 	}
+
+	githubAction := terraforms.NewGithubAction()
+	if err := githubAction.Create(cs, cs.GCPConfig); err != nil {
+		return errMsg(err)
+	}
+
 	return tea.Quit()
 }
 
