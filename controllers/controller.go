@@ -5,6 +5,8 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/meriy100/magicwand/entities"
 	"github.com/meriy100/magicwand/goinital"
+	"github.com/meriy100/magicwand/terraforms"
+	"os"
 )
 
 type Controller struct {
@@ -92,6 +94,33 @@ func (c *Controller) Run() error {
 	}
 
 	if err := interactor.CreateMain(cs.AppName, cs.AppType); err != nil {
+		return err
+	}
+
+	validate = func(input string) error {
+		if len(input) < 1 {
+			return errors.New("Invalid. GCP project id is required")
+		}
+		return nil
+	}
+
+	prompt = promptui.Prompt{
+		Label:    "GCP Project ID",
+		Validate: validate,
+	}
+
+	cs.GCPConfig.ProjectID, err = prompt.Run()
+
+	if err != nil {
+		return errors.Wrapf(err, "Prompt failed %v")
+	}
+
+	if err := os.Mkdir("terraform", 0755); err != nil {
+		return errors.Wrapf(err, "make directory failed")
+	}
+
+	backend := terraforms.NewBackend()
+	if err := backend.Create(cs.GCPConfig); err != nil {
 		return err
 	}
 
