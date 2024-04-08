@@ -9,6 +9,6 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: pinnacles/github-action-module-release/.github/actions/release-by-merge@v3.0.2
+      - uses: pinnacles/github-action-module-release/.github/actions/release-by-merge@v4.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

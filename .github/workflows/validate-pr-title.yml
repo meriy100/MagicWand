@@ -7,6 +7,6 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: pinnacles/github-action-module-release/.github/actions/validate-pr-title@v3.0.2
+      - uses: pinnacles/github-action-module-release/.github/actions/validate-pr-title@v4.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
